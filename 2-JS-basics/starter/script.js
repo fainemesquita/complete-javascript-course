@@ -186,22 +186,68 @@ GOOD LUCK 😀
 
 
 var john = {
-    billValues = [124, 48, 268, 180, 42];
-
-    calcTip: function (){
+    billValues: [124, 48, 268, 180, 42],
+    calcTip: function() {
         this.tips = [];
-        this.billTotals=[];
-        for (var i = 0; i <= this.billValues.lengh; i++ ){
+        this.billTotals = [];
+        for (var i = 0; i < this.billValues.length; i++){
             var percentage;
-            var bill = this.bills[i];
-            // if(this.billValues[i] < 50 ){
-
-            // }
+            var bill = this.billValues[i];
+            if (bill < 50) {
+                percentage = 0.2;
+            } else if (bill >= 50 && bill < 200) {
+                percentage = 0.15;
+            } else {
+                percentage = 0.1;
+            }
+        this.tips[i] = bill * percentage;
+        this.billTotals[i] = bill +  bill * percentage;
         }
 
-
-        // this.BMI = this.mass / (this.height * this.height);
-        // return this.BMI;
     }
 
 }
+
+var ella = {
+    billValues: [77, 375, 110, 45],
+    calcTip: function (){
+        this.tips = [];
+        this.billTotals=[];
+        for (var i = 0; i < this.billValues.length; i++ ){
+            var percentage;
+            var bill = this.billValues[i];
+            if(bill < 100){
+                percentage = 0.2;
+            }
+            else if( bill >= 100 && bill <= 300){
+                percentage = 0.1;
+            }
+            else {
+                percentage = 0.25;
+            }
+        this.tips[i] = bill * percentage;
+        this.billTotals[i] = bill +  bill * percentage;
+        }
+
+    }
+
+}
+
+
+
+
+function averageTips(tips) {
+    var sum = 0;
+    for (var i = 0; i < tips.length; i++) {
+        sum = sum + tips[i];
+    }
+    return sum / tips.length;
+}
+
+john.calcTip();
+ella.calcTip();
+
+john.avrg = averageTips(john.tips);
+ella.avrg = averageTips(ella.tips);
+console.log(john, ella);
+console.log(john.avrg > ella.avrg);
