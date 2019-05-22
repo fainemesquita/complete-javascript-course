@@ -39,9 +39,7 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
             //next player
             nextPlayer();
             document.querySelector('#current-' + activePlayer).textContent = 0;
-        }
-
-            
+        }            
     }
     
 });
