@@ -339,7 +339,7 @@ c) correct answer (I would use a number for this)
 
 
 //immediately invoked function expression IIFE -> creates a new scope in where the function is executed
-
+/*
 (function() {
 
     function Question(question, answers, correctAnswer) {
@@ -382,7 +382,7 @@ c) correct answer (I would use a number for this)
     
 })();
 
-
+*/
 
 /*
 --- Expert level ---
@@ -396,3 +396,56 @@ c) correct answer (I would use a number for this)
 11. Display the score in the console. Use yet another method for this.
 */
 
+(function() {
+
+    function Question(question, answers, correctAnswer) {
+        this.question = question;
+        this.answers = answers;
+        this.correctAnswer = correctAnswer;
+    }
+
+    Question.prototype.askQuestion = function () {
+        console.log(this.question);
+        for (var i = 0; i < this.answers.length; i++) {
+            console.log(i + ': ' + this.answers[i]);
+        }
+    };
+
+    Question.prototype.checkAnswer = function (answ) {
+        var score = 0;
+        if (answ == this.correctAnswer) {
+            console.log('correct answer');
+            score = score + 1;
+            console.log('your score is: ' + score)
+        } else {
+            console.log('wrong answer');
+
+        }
+    };
+
+
+    var q1 = new Question('Is my name Faine?', ['yes', 'no', 'maybe'], 0);
+
+    var q2 = new Question('Am I 30yo?', ['yes', 'no', 'maybe'], 1);
+
+    var questions = [q1, q2];
+
+    function nextQuestion() {
+
+        var questionNumber = Math.floor(Math.random() * questions.length);
+    
+        questions[questionNumber].askQuestion();
+    
+        var answer = prompt('Select the answer number');
+    
+        if (answer !== 'exit') {
+
+            questions[questionNumber].checkAnswer(parseInt(answer));
+            
+            nextQuestion();
+        }
+    }
+
+    nextQuestion();
+
+})();
