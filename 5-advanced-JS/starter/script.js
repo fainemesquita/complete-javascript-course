@@ -411,24 +411,41 @@ c) correct answer (I would use a number for this)
         }
     };
 
-    Question.prototype.checkAnswer = function (answ) {
-        var score = 0;
+    Question.prototype.checkAnswer = function (answ, callback) {
+        var sc;
         if (answ == this.correctAnswer) {
             console.log('correct answer');
-            score = score + 1;
-            console.log('your score is: ' + score)
+            sc = callback(true)
+
         } else {
             console.log('wrong answer');
-
+            sc = callback(false);
         }
+
+        this.displayScore(sc);
     };
 
+    Question.prototype.displayScore = function(score){
+        console.log('Your score is: ' + score)
+        console.log('-----------------------------')
+    }
 
     var q1 = new Question('Is my name Faine?', ['yes', 'no', 'maybe'], 0);
 
     var q2 = new Question('Am I 30yo?', ['yes', 'no', 'maybe'], 1);
 
     var questions = [q1, q2];
+
+    function score(){
+        var sc = 0;
+        return function(correctAnswer){
+            if(correctAnswer){
+                sc++;
+            }
+            return sc
+        }
+    }
+    var keepScore = score(); 
 
     function nextQuestion() {
 
@@ -440,7 +457,7 @@ c) correct answer (I would use a number for this)
     
         if (answer !== 'exit') {
 
-            questions[questionNumber].checkAnswer(parseInt(answer));
+            questions[questionNumber].checkAnswer(parseInt(answer), keepScore);
             
             nextQuestion();
         }
