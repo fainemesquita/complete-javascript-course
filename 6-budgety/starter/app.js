@@ -40,7 +40,32 @@ var controller = (function(budgetCtrl, UICtrl) {
 
 //Budget controller
 var budgetController = (function () {
-    //code
+    
+    //object  constructor
+    var Expense = function(id, description, value){
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+
+    var Income = function(id, description, value){
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+    
+    var data = {
+        allItems: {
+            exp:[],
+            inc:[]
+        }
+
+        totals: {
+            exp:0,
+            inc:0
+        }
+
+    }
 
 })();
 
@@ -80,14 +105,27 @@ var UIController = (function () {
 //Global App controller
 
 var controller = (function (budgetCtrl, UICtrl) {
-    var DOM = UICtrl.getDOMstrings();
-    
+
+    var setupEventListeners = function(){
+
+        var DOM = UICtrl.getDOMstrings();
+
+        document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
+
+        //Anonymous function can also receive parameters.  "event" already tells the browser to listen to any key.
+        document.addEventListener('keypress', function (event) {
+            if (event.keycode === 13 || event.which === 13){
+                ctrlAddItem();
+            }
+        });
+    };
+
+   
     var ctrlAddItem = function () {
         //event handler to add button
         // 1. get field input data
 
         var input = UICtrl.getInput();
-        console.log(input);
 
         // 2. add item to budget controller
 
@@ -99,13 +137,16 @@ var controller = (function (budgetCtrl, UICtrl) {
 
     };
     
-    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
-    //Anonymous function can also receive parameters.  "event" already tells the browser to listen to any key.
-    document.addEventListener('keypress', function (event) {
-        if (event.keycode === 13 || event.which === 13){
-            ctrlAddItem();
+    //public initialisation function
+    return {
+        init: function(){
+            console.log('application started');
+            setupEventListeners();
         }
-    });
+    };
 
 })(budgetController, UIController);
+
+//call init function
+controller.init();
