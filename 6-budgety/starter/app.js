@@ -153,6 +153,24 @@ var UIController = (function () {
 
             
         },
+
+        clearFields: function(){
+            var fields, fieldsArr;
+
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ',' + DOMstrings.inputValue);
+
+            //gives an array type to field so it can be sliced
+            fieldsArr = Array.prototype.slice.call(fields);
+
+            //loops over all elements of the fields array and sets the value of all of them to the empty string
+            fieldsArr.forEach(function(current, index, array) {
+                current.value = "";
+            });
+
+            //brings focus back to description
+            fieldsArr[0].focus();
+        },
+
         //method exposes DOMstrings to public
         getDOMstrings: function(){
             return DOMstrings;
@@ -193,6 +211,10 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         // 3. add item to UI
         UICtrl.addListItem(newItem, input.type);
+
+        //clear the fields
+
+        UICtrl.clearFields();
 
         // 4. calculate budget
 
