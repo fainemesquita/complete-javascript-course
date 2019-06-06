@@ -102,6 +102,27 @@ var budgetController = (function () {
             return newItem;
         },
 
+        deleteItem: function (type, id) {
+            //EX
+            // id = 6
+            //data.allItems[type][id]
+            //ids = [1 2 4 6 8]
+            //index = 3
+
+            var ids, index;
+            //creates an array with the index position of each id
+            var ids = data.allItems[type].map(function(current){
+                return current.id;
+            });
+
+            // indexOf return the index number of the element of the array
+            index = ids.indexOf(id);
+
+            if (index !== -1){
+                //splice: delete elements of the array (index start position, number of elements being deleted)
+                data.allItems[type].splice(index, 1);
+            }
+        },
 
         calculateBudget: function() {
             
@@ -176,9 +197,11 @@ var UIController = (function () {
 
             //create html string with placeholder text
 
+            //item type and id are the same
+
             if (type === 'inc'){
                 element = DOMstrings.incomeContainer;
-                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             } else if (type === 'exp'){
                 element = DOMstrings.expensesContainer;
                 
@@ -238,7 +261,7 @@ var UIController = (function () {
 
 var controller = (function (budgetCtrl, UICtrl) {
 
-    var setupEventListeners = function(){
+    var setupEventListeners = function() {
 
         var DOM = UICtrl.getDOMstrings();
 
@@ -250,6 +273,9 @@ var controller = (function (budgetCtrl, UICtrl) {
                 ctrlAddItem();
             }
         });
+
+        //container is parent to income and expenses in HTML code, so we only need to listen to the event once
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
     };
 
     var updatebudget = function () {
@@ -294,6 +320,24 @@ var controller = (function (budgetCtrl, UICtrl) {
 
     };
     
+    var ctrlDeleteItem = function(event) {
+        var itemID;
+        //parentNode treverses the DOM structure and brings the imediate parent, one at a time
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+        if (itemID){
+            splitID = itemID.split('-');
+            type = splitID[0];
+            id = parseInt(splitID[1]);
+
+            // 1. delete item from the data structure
+            budgetCtrl.deleteItem(type, ID);
+
+
+            // 2. delete item from UI
+
+            // 3. update and show new button
+        }
+    };
 
     //public initialisation function
     return {
