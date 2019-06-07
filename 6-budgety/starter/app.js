@@ -59,7 +59,7 @@ var budgetController = (function () {
     };
 
     Expense.prototype.getPercentage = function(){
-        return this.calcPercentage.percentage;
+        return this.percentage;
     };
 
     var Income = function(id, description, value){
@@ -282,7 +282,27 @@ var UIController = (function () {
                 document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + '%';
             } else {
                 document.querySelector(DOMstrings.percentageLabel).textContent = '---';
-            }        },
+            }
+        },
+
+        //query selector only selects the first one
+        displayPercentages: function(percentages){
+            var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
+            
+            var nodeListForEach = function(list, callback){
+                for (var i = 0; i < list.length; i++) {
+                    callback(list[i], i);
+                }
+            };
+
+            nodeListForEach(fields, function(current, index){
+                if (percentages[index] > 0){
+                    current.textContent = percentages[index] +  '%';
+                } else {
+                    current.textContent = '---';
+                }
+            });
+        },
 
         //method exposes DOMstrings to public
         getDOMstrings: function(){
@@ -336,8 +356,7 @@ var controller = (function (budgetCtrl, UICtrl) {
         var percentages = budgetCtrl.getPercentages();
 
         // 3. update UI
-        console.log(percentages);
-
+        UICtrl.displayPercentages(percentages);
     };
 
     var ctrlAddItem = function () {
