@@ -46,6 +46,20 @@ var budgetController = (function () {
         this.id = id;
         this.description = description;
         this.value = value;
+        this.percentage = -1;
+    };
+
+    Expense.prototype.calcPercentage = function(totalIncome){
+
+        if (totalIncome > 0) {
+            this.percentage = Math.round((this.value / totalIncome) * 100);
+        } else {
+            this.percentage = -1;
+        }
+    };
+
+    Expense.prototype.getPercentage = function(){
+        return this.calcPercentage.percentage;
     };
 
     var Income = function(id, description, value){
@@ -102,16 +116,16 @@ var budgetController = (function () {
             return newItem;
         },
 
-        deleteItem: function (type, id) {
+        deleteItem: function(type, id) {
             //EX
             // id = 6
             //data.allItems[type][id]
             //ids = [1 2 4 6 8]
             //index = 3
 
-            var ids, index;
+            var ids, index;   
             //creates an array with the index position of each id
-            var ids = data.allItems[type].map(function(current){
+            ids = data.allItems[type].map(function(current) {
                 return current.id;
             });
 
@@ -140,6 +154,21 @@ var budgetController = (function () {
                 data.percentage = -1;
             }            
             
+        },
+
+        calculatePercentages: function(){
+            data.allItems.exp.forEach(function(cur) {
+                cur.calcPercentage(data.totals.inc);
+            });
+        },
+
+        getPercentages: function(){
+            var allPerc = data.allItems.exp.map(function(cur) {
+
+                //for each expense, gets the individual object percentage and returns an array with all percentages
+                return cur.getPercentage();
+            });
+            return allPerc;
         },
 
         getBudget: function() {
@@ -222,6 +251,12 @@ var UIController = (function () {
             
         },
 
+        deleteListItem: function(selectorID){
+            //only children can be deleted in JS
+            var el = document.getElementById(selectorID); 
+            el.parentNode.removeChild(el);
+        },
+
         clearFields: function(){
             var fields, fieldsArr;
 
@@ -276,9 +311,10 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         //container is parent to income and expenses in HTML code, so we only need to listen to the event once
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+
     };
 
-    var updatebudget = function () {
+    var updateBudget = function () {
 
         // 1. calculate budget
         budgetCtrl.calculateBudget();
@@ -291,7 +327,19 @@ var controller = (function (budgetCtrl, UICtrl) {
         UICtrl.displayBudget(budget);
     };
     
-    
+    var updatePercentages = function(){
+
+        // 1. calculate percentages
+        budgetCtrl.calculatePercentages();
+
+        // 2. read percentages from budget controller
+        var percentages = budgetCtrl.getPercentages();
+
+        // 3. update UI
+        console.log(percentages);
+
+    };
+
     var ctrlAddItem = function () {
         var input, newItem;
 
@@ -312,8 +360,11 @@ var controller = (function (budgetCtrl, UICtrl) {
 
             UICtrl.clearFields();
 
-            //5. calculate and update budget
-            updatebudget();
+            // 5. calculate and update budget
+            updateBudget();
+
+            // 6. calculate and update percentages
+            updatePercentages();
 
         }
 
@@ -327,15 +378,21 @@ var controller = (function (budgetCtrl, UICtrl) {
         if (itemID){
             splitID = itemID.split('-');
             type = splitID[0];
-            id = parseInt(splitID[1]);
+            ID = parseInt(splitID[1]);
 
             // 1. delete item from the data structure
             budgetCtrl.deleteItem(type, ID);
 
 
             // 2. delete item from UI
+            UIController.deleteListItem(itemID);
 
             // 3. update and show new button
+            updateBudget();
+
+            // 4. calculate and update percentages
+            updatePercentages();
+
         }
     };
 
