@@ -681,7 +681,6 @@ class Element {
 
 }
 
-
 class Park extends Element {
     constructor(name, yearCreated, parkArea, treesNumber) {
         super(name, yearCreated);
