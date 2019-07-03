@@ -1,6 +1,7 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
-import * as searchView from './views/SearchView'
+import * as searchView from './views/SearchView';
+import * as recipeView from './views/RecipeView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /* Global state
@@ -61,7 +62,6 @@ elements.searchResPages.addEventListener('click', e => {
 });
 
 
-
 /**
  * RECIPE CONTROLLER
  */
@@ -73,7 +73,13 @@ elements.searchResPages.addEventListener('click', e => {
 
    if (id){
     // prepare UI for changes
+    recipeView.clearRecipe();
+    renderLoader(elements.recipe);
 
+    //highlight selected search item
+    if (state.search) {
+      searchView.highlightSelected(id);
+    };
     // create new recipe object
     state.recipe = new Recipe(id);
     
@@ -88,7 +94,8 @@ elements.searchResPages.addEventListener('click', e => {
         state.recipe.calcServings();
 
         // render recipe
-        console.log(state.recipe);
+        clearLoader();
+        recipeView.renderRecipe(state.recipe);
       } catch (err) {
         alert('Error loading recipe');
       }
