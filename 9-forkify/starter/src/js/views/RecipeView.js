@@ -38,7 +38,7 @@ const createIngredient = ingredient => `
     </li>
 `;
 
-export const renderRecipe = recipe => {
+export const renderRecipe = (recipe, isLiked) => {
 
   const markup = `
       <figure class="recipe__fig">
