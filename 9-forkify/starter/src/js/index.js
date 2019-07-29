@@ -176,7 +176,7 @@ likesView.toggleLikeMenu(state.likes.getNumLikes());
      likesView.toggleLikeBtn(true);
 
      // add like to UI list
-    //  likesView.renderLike(newLike);
+     likesView.renderLike(newLike);
 
    //user has liked current recipe
    } else {
@@ -187,7 +187,7 @@ likesView.toggleLikeMenu(state.likes.getNumLikes());
      likesView.toggleLikeBtn(false);
 
      // remove like to UI list
-     likesView.renderLike(newLike);
+     likesView.deleteLike(curretID);
    }
    likesView.toggleLikeMenu(state.likes.getNumLikes());
  };
