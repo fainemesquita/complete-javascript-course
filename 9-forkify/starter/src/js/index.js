@@ -14,8 +14,10 @@ import Likes from './models/Likes';
  * Shopping list object
  * Liked recipes
  */
+
 const state = {};
-window.state = state;
+// remove from production version
+// window.state = state;
 
 /** 
  * SEARCH CONTROLLER
@@ -62,7 +64,7 @@ elements.searchResPages.addEventListener('click', e => {
     const goToPage = parseInt(btn.dataset.goto, 10);
     searchView.clearResults();
     searchView.renderResults(state.search.result, goToPage);
-    console.log(goToPage);
+    // console.log(goToPage);
   }
 });
 
@@ -74,7 +76,7 @@ elements.searchResPages.addEventListener('click', e => {
  const controlRecipe = async () => {
    //get ID from URL
    const id = window.location.hash.replace('#', '');
-   console.log(id);
+  //  console.log(id);
 
    if (id){
     // prepare UI for changes
@@ -192,6 +194,18 @@ likesView.toggleLikeMenu(state.likes.getNumLikes());
    likesView.toggleLikeMenu(state.likes.getNumLikes());
  };
 
+//restore precious liked recipes  when the page loads
+window.addEventListener ('load', ()=> {
+  state.likes = new Likes();
+  //restore likes
+  state.likes.readStorage();
+  //toggle like menu
+  likesView.toggleLikeMenu(state.likes.getNumLikes());
+  //render the exinting likes
+  state.likes.likes.forEach(like => likesView.renderLike(like));
+});
+
+
 
 // Handling recipe button clicks
 elements.recipe.addEventListener('click', e => {
@@ -214,4 +228,4 @@ elements.recipe.addEventListener('click', e => {
 
 });
 
-window.l = new List();
+// window.l = new List();
