@@ -674,10 +674,10 @@ class Element {
         this.yearCreated = yearCreated;
     }
 
-    calculateAge() {
-        var age = new Date().getFullYear - this.yearCreated;
-        console.log(age);
-    }
+    // calculateAge() {
+    //     var age = new Date().getFullYear - this.yearCreated;
+    //     console.log(age);
+    // }
 
 }
 
@@ -695,10 +695,10 @@ class Park extends Element {
 }
 
 class Street extends Element {
-    constructor(name, yearCreated, streetLength, streetType = 3) {
+    constructor(name, yearCreated, lenght, size = 3) {
         super(name, yearCreated);
-        this.streetLength = streetLength;
-        this.streetType = streetType;
+        this.lenght = lenght;
+        this.size = size;
     }
 
     streetType() {
@@ -723,16 +723,68 @@ new Street('Evergreen Street', 2008, 2.7, 2),
 new Street('4th Street', 2015, 0.8),
 new Street('Sunset Boulevard', 1982, 2.5, 5)];
 
-const ParksAge = 0;
-allParks.forEach(Park => {
-    ParksAge +=  this.Park.age;
-    return ParksAge / allParks.length; 
+
+function calc(arr){
+    //reduces all the elements in the array to one single method - by sum in this case, starting at 0 index
+    const sum = arr.reduce((prev, cur, index) => prev + cur, 0);
+    return [ sum, sum/arr.length];
+};
+
+function reportParks(p){
+    console.log('------------PARKS REPORT-----------')
+
+    //density
+    p.forEach(el => el.treeDensity());
+
+    //average age
+
+
+    const ages = p.map(el => new Date().getFullYear() - el.yearCreated);
+    const [totalAge, avgAge] = calc(ages);
+    console.log(`Our ${p.length} parks have an average of ${avgAge} years.`);
+
+    //which park(s) have moren than 1000 trees
+    const i = p.map(el => el.treesNumber).findIndex(el => el >= 1000);
+    console.log(`${p[i].name} has more than 1000 trees`)
+
+}
+
+
+function reportStreets(s){
+    console.log('------------STREETS REPORT-----------')
+    const [totalLength, avgLength] = calc(s.map (el => el.lenght));
+    console.log(`Our ${s.length} streets have a total length of ${totalLength} km, with an average of ${avgLength} km.`);
+
+
+    s.forEach(el => el.streetType());
     
-});
+}
 
 
 
-var boxesArr5 = Array.prototype.slice.call(boxes);
-boxesArr5.forEach(function(cur) {
-    cur.style.backgroundColor = 'dodgerblue';
-});
+
+reportParks(allParks);
+reportStreets(allStreets);
+
+
+
+
+
+
+
+
+
+
+// const ParksAge = 0;
+// p.forEach(Park => {
+//     ParksAge +=  this.Park.age;
+//     return ParksAge / allParks.length; 
+    
+// });
+
+
+
+// var boxesArr5 = Array.prototype.slice.call(boxes);
+// boxesArr5.forEach(function(cur) {
+//     cur.style.backgroundColor = 'dodgerblue';
+// });
