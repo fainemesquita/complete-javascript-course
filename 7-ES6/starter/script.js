@@ -674,10 +674,10 @@ class Element {
         this.yearCreated = yearCreated;
     }
 
-    // calculateAge() {
-    //     var age = new Date().getFullYear - this.yearCreated;
-    //     console.log(age);
-    // }
+    calculateAge() {
+        const age = new Date().getFullYear() - this.yearCreated;
+        console.log(`${this.name} is ${age} yo.`);
+    }
 
 }
 
@@ -708,7 +708,7 @@ class Street extends Element {
         classification.set(3, 'normal');
         classification.set(4, 'big');
         classification.set(5, 'huge');
-        console.log(`${this.name}, build in ${this.buildYear}, is a ${classification.get(this.size)} street.`);
+        console.log(`${this.name}, build in ${this.yearCreated}, is a ${classification.get(this.size)} street.`);
     }
 }
 
@@ -727,7 +727,7 @@ new Street('Sunset Boulevard', 1982, 2.5, 5)];
 function calc(arr){
     //reduces all the elements in the array to one single method - by sum in this case, starting at 0 index
     const sum = arr.reduce((prev, cur, index) => prev + cur, 0);
-    return [ sum, sum/arr.length];
+    return [ sum, sum / arr.length];
 };
 
 function reportParks(p){
@@ -737,8 +737,6 @@ function reportParks(p){
     p.forEach(el => el.treeDensity());
 
     //average age
-
-
     const ages = p.map(el => new Date().getFullYear() - el.yearCreated);
     const [totalAge, avgAge] = calc(ages);
     console.log(`Our ${p.length} parks have an average of ${avgAge} years.`);
@@ -757,11 +755,12 @@ function reportStreets(s){
 
 
     s.forEach(el => el.streetType());
-    
+    s.forEach(el => el.calculateAge());
+
+
+
+
 }
-
-
-
 
 reportParks(allParks);
 reportStreets(allStreets);
